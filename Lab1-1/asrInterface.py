@@ -14,7 +14,7 @@ timecnt=0
 class Ui_MainWindow(QtWidgets.QMainWindow):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(400, 600)
+        MainWindow.resize(400, 660)
         MainWindow.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -76,7 +76,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.reText.setStyleSheet("color: rgb(255,255,255);")
         self.reText.setWordWrap(True)
         self.reText.setObjectName('reText')
-        self.reText.setGeometry(QtCore.QRect(60,450,300,70))
+        self.reText.setGeometry(QtCore.QRect(60,520,300,70))
+
+        # Add command help
+        self.label_5=QtWidgets.QLabel(self.centralwidget)
+        self.label_5.setFont(font)
+        self.label_5.setStyleSheet("color: rgb(0,117,210);")
+        self.label_5.setGeometry(QtCore.QRect(60,440,300,70))
+        self.label_5.setWordWrap(True)
+        self.label_5.setObjectName("label_5")
 
         # self.timer=QtCore.QTimer(self)
         # self.timer.timeout.connect(self.add_reText_info)
@@ -89,10 +97,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Voice Assistant"))
-        self.label_3.setText(_translate("MainWindow", "1. Enjoy music by saying \"Play music\""))
-        self.label_2.setText(_translate("MainWindow", "You can:"))
         self.label.setText(_translate("MainWindow", "Hi! How can I help?"))
+        self.label_2.setText(_translate("MainWindow", "You can:"))
+        self.label_3.setText(_translate("MainWindow", "1. Enjoy music by saying \"Play music\""))
         self.label_4.setText(_translate("MainWindow", "2. Take some notes by saying \"Open Notepad\""))
+        self.label_5.setText(_translate("MainWindow","3. Check the weather by saying \"Check weather\""))
 
     def add_reText_info(self,content):
         global timecnt
