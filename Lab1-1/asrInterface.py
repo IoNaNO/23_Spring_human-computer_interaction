@@ -9,8 +9,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
 
-timecnt=0
-
 class Ui_MainWindow(QtWidgets.QMainWindow):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -104,6 +102,4 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_5.setText(_translate("MainWindow","3. Check the weather by saying \"Check weather\""))
 
     def add_reText_info(self,content):
-        global timecnt
-        timecnt=timecnt+1
         self.reText.setText(f'You said:{content}')
