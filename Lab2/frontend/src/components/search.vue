@@ -55,7 +55,6 @@ const imgSearch = () => {
   }
   results.value=[];
   searching.value = true;
-  searched.value=true;
   console.log("search",image.has('file'));
   let config = {
     method: 'post',
@@ -70,6 +69,7 @@ const imgSearch = () => {
     (response) => {
       // console.log(response);
       searching.value = false;
+      searched.value=true;
       for(const key in response.data){
         results.value.push(base_url+result_base+response.data[key]);
       }
