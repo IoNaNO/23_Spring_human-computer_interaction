@@ -154,7 +154,7 @@ cython_debug/
 # project generated data
 database
 imagenet
-.pickle
+*.pickle
 saved_features_recom.txt
 result/
 uploads/
