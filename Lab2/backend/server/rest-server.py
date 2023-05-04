@@ -20,6 +20,8 @@ from flask_cors import CORS
 
 UPLOAD_FOLDER = 'uploads'
 FAVORITE_FOLDER='static/favorite'
+TAGS_FOLDER='database/tags'
+RESULT_FOLDER='static/result'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 from tensorflow.python.platform import gfile
 app = Flask(__name__, static_url_path = "")
@@ -39,6 +41,13 @@ with open('saved_features_recom.txt') as f:
         		extracted_features[i,:]=line.split()
 print("loaded extracted_features") 
 
+# Check image tag
+def check_number_in_file(file_path, number):
+    with open(file_path, "r") as f:
+        for line in f:
+            if line.strip() == number:
+                return True
+    return False
 
 #==============================================================================================================================
 #                                                                                                                              
@@ -81,8 +90,9 @@ def upload_img():
             recommend(inputloc, extracted_features)
             os.remove(inputloc)
             image_path = ""
-            image_list =[os.path.join(image_path, file) for file in os.listdir(result)
+            result_images =[os.path.join(image_path, file) for file in os.listdir(result)
                               if not file.startswith('.')]
+            # result_images=image_list
             # images = {
 			# 'image0':image_list[0],
             # 'image1':image_list[1],	
@@ -94,7 +104,7 @@ def upload_img():
 			# 'image7':image_list[7],	
 			# 'image8':image_list[8]
 		    #   }				
-            return jsonify(image_list)
+            return jsonify(result_images)
 
 # Return the raw image
 @app.route('/image',methods=['GET'])
@@ -135,6 +145,31 @@ def remove_favorite():
     image_path=FAVORITE_FOLDER+"/"+image_name
     os.remove(image_path)
     return jsonify({'code':200,'msg':"Image removed from favorites"})
+
+# Request image tags
+@app.route('/tag',methods=['GET'])
+def get_tags():
+    tags_list =[file.split('.')[0] for file in os.listdir(TAGS_FOLDER)
+                              if not file.startswith('.') or file=='README.txt']
+    return jsonify(tags_list)
+
+# Select image by tag
+@app.route('/tag',methods=['POST'])
+def select_image_by_tag():
+    tag=request.args['tag']
+    print(tag)
+    result_images=[file for file in os.listdir(RESULT_FOLDER)
+                              if not file.startswith('.')]
+    if tag=="all":
+        return jsonify(result_images)
+    tag_path=TAGS_FOLDER+"/"+tag+".txt"
+    selected_images=[]
+    for image_name in result_images:
+        image_no=image_name.split('.')[0][2:]
+        # print(image_no)
+        if check_number_in_file(tag_path, image_no):
+            selected_images.append(image_name)
+    return jsonify(selected_images)
 #==============================================================================================================================
 #                                                                                                                              
 #                                           Main function                                                        	            #						     									       

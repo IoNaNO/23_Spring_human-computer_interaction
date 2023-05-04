@@ -7,9 +7,12 @@ import axios from "axios";
 const uploadUrl = ref(void (0));
 const image = new FormData();
 const imageUrl = ref("");
+const value=ref('')
 const uploaded = ref(false);
 const searching = ref(false);
+const searched=ref(false);
 const results=ref([]);
+const tags=ref([])
 const base_url="http://127.0.0.1:5000/image?path=";
 const result_base='static/result/'
 const handleError = (err: any) => {
@@ -52,6 +55,7 @@ const imgSearch = () => {
   }
   results.value=[];
   searching.value = true;
+  searched.value=true;
   console.log("search",image.has('file'));
   let config = {
     method: 'post',
@@ -61,7 +65,7 @@ const imgSearch = () => {
     },
     data: image
   }
-  console.log(config);
+  // console.log(config);
   axios(config).then(
     (response) => {
       // console.log(response);
@@ -105,6 +109,53 @@ const imgFavorite=(path:string)=>{
   )
 };
 
+const getTags=()=>{
+  let config={
+    method:'get',
+    url:'/tag'
+  };
+  axios(config).then(
+    (response)=>{
+      for(const key in response.data){
+        tags.value.push(response.data[key]);
+      }
+    }
+  ).catch(
+    (error)=>{
+      console.log(error);
+      handleError(error);
+    }
+  )
+};
+
+getTags();
+
+const imgFilter=()=>{
+  if(value.value===''){
+    value.value='all';
+  }
+  console.log(value.value);
+  let config={
+    method:'post',
+    url:'/tag',
+    params:{
+      tag:value.value
+    }
+  };
+  axios(config).then(
+    (response)=>{
+      results.value=[];
+      for(const key in response.data){
+        results.value.push(base_url+result_base+response.data[key]);
+      }
+    }
+  ).catch(
+    (error)=>{
+      console.log(error);
+      handleError(error);
+    }
+  )
+};
 </script>
 
 <template>
@@ -119,11 +170,11 @@ const imgFavorite=(path:string)=>{
       </div>
       <div class="preview" v-show="imageUrl">
         <el-image :src="imageUrl" :preview-src-list="[imageUrl]" class="el-upload-preview-image" />
-        <el-button size="small" type="warning" round @click="imgDel">Delete</el-button>
+        <el-button type="warning" round @click="imgDel">Delete</el-button>
       </div>
     </el-upload>
     <div class="mb-4">
-      <el-button type="primary" :icon="Search" size="large" round @click="imgSearch">Search</el-button>
+      <el-button type="primary" :icon="Search"  round @click="imgSearch">Search</el-button>
     </div>
   </div>
   <div class="searching" v-if="searching">
@@ -131,7 +182,16 @@ const imgFavorite=(path:string)=>{
       </el-icon>
       <span class="search-tip">Searching...</span>
   </div>
-  <div class="result" v-if="results.length>0">
+  <div class="result" v-if="searched">
+    <el-select v-model="value" class="m-2" placeholder="Select" clearable>
+    <el-option
+      v-for="(item,index) in tags"
+      :key="index"
+      :label="item"
+      :value="item"
+    />
+    </el-select>
+    <el-button type="primary" @click="imgFilter">Filter</el-button>
     <h2>{{ results.length }} Results Found</h2>
     <el-row>
       <el-col :span="8" v-for="(item,index) in results" :key="index" style="justify-content: center; display: flex; flex-wrap: wrap;">
