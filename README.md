@@ -1,5 +1,7 @@
 # 23_Spring_Human-computer_Interaction
+
 ## How to run the code
+
 ### Lab 1-1
 
 ```bash
@@ -33,5 +35,30 @@ python server/rest-server.py
 ```bash
 npm i
 npm run dev
+```
+
+### Lab 3
+
+1. Create virtual environment
+
+```bash
+conda create --name dashboard python=3.9
+conda activate dashboard
+python -m pip install dash
+python -m pip install pandas
+python -m pip install geopy
+```
+
+2. Pre process the data
+
+  I have finish the data processing before the submission, so you can skip this step.
+```bash
+python ./data_prep.py
+```
+
+3. Run the dash server
+
+```bash
+python ./college_salaries_visualization.py
 ```
 
