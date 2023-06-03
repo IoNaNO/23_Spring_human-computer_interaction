@@ -62,3 +62,6 @@ python ./data_prep.py
 python ./college_salaries_visualization.py
 ```
 
+### Lab 4
+
+The design prototypes, which are `.png` files, are located in the `resource` folder.
